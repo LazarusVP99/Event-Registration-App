@@ -6,6 +6,7 @@
   "main": "assets/index.js",
   "scripts": {
     "run:client": "npm run dev --prefix ../client -- --host",
+    "start": "node assets/index.js",
     "run:server": "nodemon --watch assets --exec \"node assets/index.js\"",
     "dev": "concurrently \"npm run run:client\" \"npm run run:server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
