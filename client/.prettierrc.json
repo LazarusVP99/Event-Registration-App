@@ -1,0 +1,23 @@
+{
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "jsxSingleQuote": true,
+    "plugins": [
+        "prettier-plugin-tailwindcss",
+        "./node_modules/prettier-plugin-sort-imports/dist/index.js"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+    "proseWrap": "always",
+    "endOfLine": "lf",
+    "singleAttributePerLine": true,
+    "jsxBracketSameLine": false,
+    "quoteProps": "consistent",
+    "embeddedLanguageFormatting": "auto"
+}
