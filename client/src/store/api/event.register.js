@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_URL, endpoints } from '../../config/api';
+import { endpoints } from '../../config/api';
 
 /**
  * User Registration Fetch
@@ -8,7 +8,7 @@ import { API_URL, endpoints } from '../../config/api';
 export const registerApi = createApi({
     reducerPath: 'userRegistration',
     baseQuery: fetchBaseQuery({
-        baseUrl: API_URL,
+        baseUrl: '/api/',
         prepareHeaders: (headers) => {
             headers.set('Content-Type', 'application/json');
             return headers;

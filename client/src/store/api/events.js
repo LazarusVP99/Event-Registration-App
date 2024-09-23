@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_URL, endpoints } from '../../config/api';
+import { endpoints } from '../../config/api';
 /**
  * Available Events
  */
@@ -7,7 +7,7 @@ import { API_URL, endpoints } from '../../config/api';
 export const eventsApi = createApi({
     reducerPath: 'availableEvents',
     baseQuery: fetchBaseQuery({
-        baseUrl: API_URL,
+        baseUrl: '/api/',
         prepareHeaders: (headers) => {
             headers.set('Content-Type', 'application/json');
             return headers;
