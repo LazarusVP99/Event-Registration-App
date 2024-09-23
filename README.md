@@ -21,7 +21,7 @@ npm run run:server
 ```
 
 ## Script to run client only
-cd client
+cd server
 
 ```
 npm run run:client
