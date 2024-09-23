@@ -1,5 +1,10 @@
 # Event Registration App for ELIFTECH IT School Examination
 
+Deployed application is available at
+'''
+https://event-registration-app-1.onrender.com/
+'''
+
 ## Instructions to run the application:
 
 cd server
