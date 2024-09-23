@@ -1,6 +1,5 @@
 # Event Registration App for ELIFTECH IT School Examination
 
-## Deployed Application
 # Deployed Application
 
 The Event Registration App is live and accessible at:
