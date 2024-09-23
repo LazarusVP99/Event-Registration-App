@@ -15,7 +15,7 @@ import sortEventsSlice from './features/sortEvents';
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['eventData']
+    whitelist: ['eventData', 'sortEvents']
 };
 
 const persistedReducer = persistReducer(persistConfig, combineReducers({

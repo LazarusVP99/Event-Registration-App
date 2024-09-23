@@ -13,9 +13,9 @@ const RegistrationForm = ({ dispatch }) => {
   const [registerUser] = useRegisteredUserMutation();
   const onSubmitHandler = async (values) => userSubmission({ values, registerUser, dispatch });
   return (
-    <div className='flex flex-col items-center justify-center w-screen h-screen bg-gray-800 shadow-sm shadow-white'>
-      <div className='border border-b-slate-300 rounded-t-md w-full p-5 max-w-lg text-center'>
-        <h1 className='text-white text-2xl font-bold'>Event Registration Form</h1>
+    <div className='flex flex-col items-center justify-center w-screen min-h-screen bg-gray-800 shadow-sm shadow-white p-4'>
+      <div className='border border-b-slate-300 rounded-t-md w-full p-4 md:p-5 max-w-lg text-center'>
+        <h1 className='text-white text-3xl md:text-4xl mt-4 md:mt-6 font-bold text-center'>Event Registration Form</h1>
       </div>
       <Formik
         initialValues={{
@@ -32,9 +32,9 @@ const RegistrationForm = ({ dispatch }) => {
           <Form
             noValidate
             onSubmit={handleSubmit}
-            className='bg-white rounded-b-md p-8 w-full max-w-lg shadow-lg'
+            className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg'
           >
-            <div className='space-y-10'>
+            <div className='space-y-6 md:space-y-10'>
               <FieldComponent
                 errors={errors}
                 touched={touched}
@@ -49,8 +49,8 @@ const RegistrationForm = ({ dispatch }) => {
                 getFieldProps={getFieldProps}
               />
 
-              <div className='flex gap-8'>
-                <span className='text-xl'>Enter your birth date:</span>
+              <div className='flex flex-col md:flex-row md:items-center md:gap-8'>
+                <span className='text-lg md:text-xl mb-2 md:mb-0'>Enter your birth date:</span>
                 <FieldComponent
                   errors={errors}
                   touched={touched}
@@ -61,7 +61,7 @@ const RegistrationForm = ({ dispatch }) => {
               </div>
             </div>
 
-            <hr className='w-full h-0.5 bg-stone-500 my-8' />
+            <hr className='w-full h-0.5 bg-stone-500 my-6 md:my-8' />
 
             <RadioSelect
               errors={errors}
@@ -69,17 +69,17 @@ const RegistrationForm = ({ dispatch }) => {
               getFieldProps={getFieldProps}
             />
 
-            <div className='flex justify-between items-center mt-6'>
+            <div className='flex flex-col md:flex-row justify-between items-center mt-6 space-y-4 md:space-y-0'>
               <button
                 type='submit'
                 disabled={isSubmitting}
-                className='bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg capitalize disabled:bg-gray-400'
+                className='w-full md:w-auto bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg capitalize disabled:bg-gray-400'
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Registration'}
               </button>
               <Link
                 to='/'
-                className='hover:text-gray-800/75 uppercase text-neutral-900 font-semibold tracking-wide'
+                className='w-full md:w-auto text-center hover:text-gray-800/75 uppercase text-neutral-900 font-semibold tracking-wide'
               >
                 Return to Events
               </Link>

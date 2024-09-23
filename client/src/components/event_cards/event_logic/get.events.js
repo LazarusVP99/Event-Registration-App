@@ -1,14 +1,15 @@
 import showSwal from "../../utils/alerts/message";
 
 const getEventCards = async ({
-    currentPage, getPaginatedEvents, setEvents,
+    currentPage, getPaginatedEvents, setEvents, setScrollLoading
 }) => {
     const { page, limit } = currentPage;
     try {
         const response = await getPaginatedEvents({
             page,
             limit,
-            sort: { organizer: 'desc' },
+            order: 'asc',
+            sort: 'title',
         }).unwrap();
 
         if (response.events.length > 0) {
@@ -20,6 +21,10 @@ const getEventCards = async ({
             text: error.message,
             icon: 'error',
         });
+    } finally {
+        setTimeout(() => {
+            setScrollLoading(false);
+        }, 200);
     }
 };
 

@@ -15,13 +15,11 @@ export const eventsApi = createApi({
     }),
     endpoints: (build) => ({
         getPaginatedEvents: build.mutation({
-            query: ({ limit, sort, page }) => ({
+            query: ({ limit, order, page, sort }) => ({
                 url: 'events/all',
                 method: 'POST',
                 body: {
-                    limit,
-                    sort,
-                    page,
+                    limit, order, page, sort,
                 },
             }),
         }),

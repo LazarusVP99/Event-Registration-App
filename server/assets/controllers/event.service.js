@@ -6,25 +6,23 @@ const eventsHandler = {
     getPaginatedEvents: maestro(async (req, res) => {
         try {
             const {
-                page = 1, limit = 5, sort = {},
+                page = 1, limit = 5, order = 'asc', sort = 'createdAt',
             } = req.body;
 
-            const sortOptions = Object.entries(sort).map((sortOption) => {
-                const [key, value] = sortOption;
-                return { [key]: value === 'asc' ? 1 : -1 };
-            });
-
-            const combinedSortOptions = Object.assign({}, ...sortOptions);
+            const sortOrder = order === 'asc' ? 1 : -1;
             const options = {
-                page, limit,
-                sort: combinedSortOptions,
+                page,
+                limit,
+                sort: { [sort]: sortOrder },
                 customLabels: {
                     totalDocs: 'totalEvents',
                     docs: 'events',
                 },
             };
 
-            const result = await Event.aggregatePaginate([], options);
+            const result = await Event.aggregatePaginate([
+                { $sort: { [sort]: sortOrder } }
+            ], options);
 
             res.status(201).json(result);
         } catch (error) {

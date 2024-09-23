@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     page: 1,
-    limit: 6,
+    limit: 12,
 };
 
 const currentPageSlice = createSlice({

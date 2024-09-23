@@ -24,6 +24,7 @@ export const userSubmission = async ({ values, registerUser, dispatch }) => {
             await registerUser({
                 fullName, email, eventSeeker, dateOfBirth, eventId,
             }).unwrap();
+            location.reload();
 
             dispatch(setEventData({
                 eventId,

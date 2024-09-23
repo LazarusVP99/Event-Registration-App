@@ -2,6 +2,8 @@
 import {
     useCallback, useEffect, useRef, useState
 } from "react";
+import { useDispatch } from "react-redux";
+import { setCurrentPage } from "../store/features/currentPage";
 
 /**
  * Custom hook that manages the countdown timer for an event.
@@ -58,3 +60,74 @@ export function useEventCountdown ({ event }) {
 
     return eventCountdown;
 }
+
+
+
+/**
+ * A custom React hook that implements infinite scrolling functionality.
+ *
+ * This hook manages the state and behavior related to infinite scrolling, including:
+ * - Tracking the current page and limit for pagination
+ * - Detecting when the user has scrolled to the bottom of the page
+ * - Dispatching an action to load the next page of data
+ * - Restoring the scroll position after new data has been loaded
+ *
+ * @param {object} object - An object containing the current page and limit values.
+ * @param {object} pageData - An object containing flags for whether there are more pages available.
+ * @returns {object} An object containing the current scroll loading state and a function to set it.
+ */
+export const useInfiniteScroll = ({ object, pageData }) => {
+    const dispatch = useDispatch();
+    const [scrollLoading, setScrollLoading] = useState(false);
+    const { page, limit } = object;
+    const [hasNextPage, hasPrevPage] = pageData;
+    const lastScrollPosition = useRef(0);
+    const scrollPositionBeforeLoad = useRef(0);
+
+    const debounce = useCallback((func, delay) => {
+        let timeoutId;
+        return (...args) => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func(...args), delay);
+        };
+    }, []);
+
+    useEffect(() => {
+        const handleScroll = debounce(() => {
+            const { offsetHeight } = document.documentElement;
+            const windowHeight = window.innerHeight;
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const scrolledToBottom = windowHeight + scrollTop >= offsetHeight - 100;
+            const scrollDirection = scrollTop > lastScrollPosition.current ? 'down' : 'up';
+            lastScrollPosition.current = scrollTop;
+
+            if (scrolledToBottom
+                && hasNextPage
+                && scrollDirection === 'down') {
+                scrollPositionBeforeLoad.current = scrollTop;
+                dispatch(setCurrentPage(
+                    { page, limit: limit + 12 }
+                ));
+                setScrollLoading(true);
+
+            }
+        }, 500);
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [dispatch, hasNextPage, hasPrevPage, limit, page, debounce]);
+
+    useEffect(() => {
+        if (!scrollLoading) {
+            window.scrollTo({
+                top: scrollPositionBeforeLoad.current + 300,
+                behavior: 'smooth',
+            });
+        }
+    }, [scrollLoading]);
+
+    return { scrollLoading, setScrollLoading };
+};

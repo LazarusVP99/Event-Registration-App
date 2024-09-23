@@ -24,31 +24,38 @@ export const applySort = async ({
     getPaginatedEvents,
 }) => {
     const { page, limit } = currentPage;
+    const { sort, order } = sortValue;
+
+    if (!sort && !order) return;
+
+    if (sort && !order) {
+        showSwal({
+            title: 'Information',
+            text: 'Please select an order option',
+            icon: 'info',
+        });
+        return;
+    }
+
+    if (!sort && order) {
+        showSwal({
+            title: 'Information',
+            text: 'Please select a sort option',
+            icon: 'info',
+        });
+        return;
+    }
+
     try {
-        if (sortValue.sort && sortValue.order) {
-            const sortResponse = await getPaginatedEvents({
-                page,
-                limit,
-                sort: { [sortValue.sort]: sortValue.order },
-            }).unwrap();
+        const sortResponse = await getPaginatedEvents({
+            page,
+            limit,
+            sort,
+            order
+        }).unwrap();
 
-            sortResponse.events.length > 0 && setEvents(sortResponse.events);
-        }
-
-        if (sortValue.order && !sortValue.sort) {
-            showSwal({
-                title: 'Information',
-                text: 'Please select a sort option',
-                icon: 'info',
-            });
-        }
-
-        if (sortValue.sort && !sortValue.order) {
-            showSwal({
-                title: 'Information',
-                text: 'Please select an order option',
-                icon: 'info',
-            });
+        if (sortResponse.events.length > 0) {
+            setEvents(sortResponse.events);
         }
     } catch (error) {
         showSwal({

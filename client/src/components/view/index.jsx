@@ -44,14 +44,23 @@ const ViewMembers = () => {
 
   const chartProps = chartData(usersEventTimestampObject, usersTimestamp, id);
 
-  // Retrieve event members data from the database
   useEffect(() => data && setEventMembers(data), [data]);
-  // Retrieve event data from the database
   useEffect(() => eventsData && setEvent(eventsData), [eventsData]);
-  // useEffect hook that is applying filtered data to the event members state
   useEffect(() => data && applyFilters({ data, filter, setEventMembers }), [filter, data]);
 
   if (isLoading) return <Spinner />;
+    if (
+      new Date(event.endTime).getTime() < new Date() ||
+      new Date(event.startTime).getTime() < new Date()
+    ) {
+      return (
+        <div className='flex w-full justify-center items-center h-screen'>
+          <div className='font-bold text-base sm:text-lg md:text-xl lg:text-2xl xl:text-4xl text-red-500 bg-red-100 p-2 shadow-md'>
+            Event has ended
+          </div>
+        </div>
+      );
+    }
 
   if (isError) return <div>Error retrieving event members</div>;
 
@@ -61,44 +70,41 @@ const ViewMembers = () => {
     <Line
       options={options}
       data={chartProps}
-      className='border border-gray-800'
+      className='border border-gray-800 w-full h-full'
     />
   );
 
   return (
     <>
-      <div className='relative m-5 mb-8 sm:mb-16 lg:mb-0 w-full h-full flex flex-col items-center justify-center gap-8 lg:justify-between lg:items-start'>
-        <h1 className='text-2xl w-full text-center lg:text-start text-gray-800 cursor-default font-semibold sm:text-3xl xl:text-4xl'>
+      <div className='relative m-3 sm:m-5 mb-8 sm:mb-16 lg:mb-0 w-full h-full flex flex-col items-center justify-center gap-4 sm:gap-8 lg:justify-between lg:items-start'>
+        <h1 className='text-xl w-full text-center lg:text-start text-gray-800 cursor-default font-semibold sm:text-3xl xl:text-4xl'>
           <q>{event.title}</q> participants
         </h1>
-        <div className='flex flex-col w-full h-52 gap-5'>
-          <div className='flex h-fit w-fit lg:w-1/2 gap-5 rounded-md bg-gray-800 p-5 md:flex-row lg:gap-12'>
-            <SearchBar
-              filters={(keyword) => filterByEmail(keyword, setFilter)}
-              search={'Email'}
-            />
-            <SearchBar
-              filters={(keyword) => filterByName(keyword, setFilter)}
-              search={'Name'}
-            />
-          </div>
-
-          <div className='flex justify-between px-6 xl:flex-col items-start xl:items-stretch w-full h-96'>
-            <div
-              className='cursor-default h-fit w-fit lg:w-60 bg-gray-800 text-white p-2 rounded-md shadow-md hover:bg-gray-700
-          transition-colors duration-150'
-            >
-              <p className='text-lg lg:text-xl mb-1'>Event starts in</p>
-                  <EventCountdown event={event} />
+        <div className='flex flex-col w-full gap-3 sm:gap-5'>
+          <div className='flex flex-col md:flex-row w-80 md:w-fit gap-3 sm:gap-5 rounded-md bg-gray-800 p-3 sm:p-5'>
+            <div className='w-full sm:w-1/2'>
+              <SearchBar
+                filters={(keyword) => filterByEmail(keyword, setFilter)}
+                search={'Email'}
+              />
             </div>
-
-            <div className='static lg:absolute mr-6 md:mr-12 lg:top-10 lg:right-20 w-60 sm:w-80 lg:w-96 h-40 md:h-40 sm:h-36 lg:h-80 p-2'>
-              {displayAmountOfUsersRegistered()}
+            <div className='w-full sm:w-1/2'>
+              <SearchBar
+                filters={(keyword) => filterByName(keyword, setFilter)}
+                search={'Name'}
+              />
             </div>
           </div>
         </div>
+        <div className='flex flex-col sm:flex-row justify-between px-3 sm:items-start items-center md:items-stretch w-full'>
+            <EventCountdown event={event} />
+
+          <div className='lg:absolute relative lg:right-20 lg:top-20 w-full sm:w-80 lg:w-96 h-40 sm:h-48 lg:h-60 p-2 mr-1 sm:mr-2 lg:m-0'>
+            {displayAmountOfUsersRegistered()}
+          </div>
+        </div>
       </div>
-      <div className='grid h-full max-h-60 grid-cols-1 place-items-center gap-y-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
+      <div className='grid h-full max-h-60 grid-cols-1 place-items-center gap-y-4 sm:gap-y-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
         <AnimatePresence>
           {eventMembers.map(({ fullName, email, _id }) => (
             <motion.div
@@ -108,15 +114,15 @@ const ViewMembers = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.2 }}
-              className='flex h-40 w-[93%] flex-col items-center justify-center gap-5 rounded-lg border border-gray-200 bg-white p-4 shadow-md dark:border-gray-600 dark:bg-gray-800'
+              className='flex h-36 sm:h-40 w-[95%] sm:w-[93%] flex-col items-center justify-center gap-3 sm:gap-5 rounded-lg border border-gray-200 bg-white p-3 sm:p-4 shadow-md dark:border-gray-600 dark:bg-gray-800'
             >
-              <h5 className='sm:text-md mb-1 text-lg font-medium text-gray-900 xl:text-2xl dark:text-white'>
+              <h5 className='text-base sm:text-lg font-medium text-gray-900 xl:text-2xl dark:text-white'>
                 <HighlightText
                   query={fullName}
                   highlight={filter.nameSearch}
                 />
               </h5>
-              <span className='text-lg text-gray-500 xl:text-xl dark:text-gray-400'>
+              <span className='text-sm sm:text-base lg:text-lg text-gray-500 xl:text-xl dark:text-gray-400'>
                 <HighlightText
                   query={email}
                   highlight={filter.emailSearch}

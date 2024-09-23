@@ -21,7 +21,7 @@ connectToMongoose()
 app.use(morgan('dev'))
 app.use('/api', router)
 
-const PORT = 3001
+const PORT = 3100
 
 app.listen(PORT, () => {
     console.log(`server is running at http://localhost:${PORT}`)

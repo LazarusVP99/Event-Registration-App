@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
+import { motion } from 'framer-motion';
 
 import EventCards from './event_components/event_cards';
 import SortCards from './event_components/sort_cards';
 import Spinner from '../utils/spinner';
 
-import { getCurrentPage, setCurrentPage } from '../../store/features/currentPage';
 import { useGetPaginatedEventsMutation } from '../../store/api/events';
+import { getCurrentPage } from '../../store/features/currentPage';
 import { getSortedEvents } from '../../store/features/sortEvents';
 import { applySort } from './event_logic/sort.handlers';
+import { useInfiniteScroll } from '../../hooks/hooks';
 import getEventCards from './event_logic/get.events';
 import { useSelector } from 'react-redux';
 
@@ -18,8 +20,13 @@ const Events = ({ dispatch }) => {
   const [events, setEvents] = useState([]);
   const [getPaginatedEvents, { data: paginatedEvents, isLoading, isError }] =
     useGetPaginatedEventsMutation();
-
   const { limit, page } = currentPage;
+
+  // Infinite Scroll Handler
+  const { scrollLoading, setScrollLoading } = useInfiniteScroll({
+    object: { page, limit },
+    pageData: [paginatedEvents?.hasNextPage, paginatedEvents?.hasPrevPage],
+  });
 
   // Retrieve events data from the database
   useEffect(() => {
@@ -28,12 +35,13 @@ const Events = ({ dispatch }) => {
         currentPage,
         events,
         getPaginatedEvents,
+        setScrollLoading,
         setEvents,
       });
 
     void getEvents();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getPaginatedEvents, setEvents, currentPage]);
 
   // Apply sorting to the events when onclick event fired
@@ -45,16 +53,8 @@ const Events = ({ dispatch }) => {
       getPaginatedEvents,
     });
 
-  const hasNextPage = paginatedEvents?.hasNextPage;
-  const hasPrevPage = paginatedEvents?.hasPrevPage;
-
-  const loadMore = () => hasNextPage && dispatch(setCurrentPage({ page: page + 1, limit }));
-
-  const loadLess = () => hasPrevPage && dispatch(setCurrentPage({ page: page - 1, limit }));
-
   if (isLoading && events.length === 0) return <Spinner />;
-
-  if (isError) return <div>Error</div>;
+  if (isError) return <div className='text-xl font-bold text-red-600'>Error</div>;
 
   return (
     <>
@@ -65,34 +65,62 @@ const Events = ({ dispatch }) => {
         applySort={applySortHandler}
       />
       {/* Event Cards */}
-      <div className='grid h-fit w-full grid-cols-1 md:grid-cols-2 xl:grid-cols-3'>
-        {events?.map((event) => (
-          <EventCards
+      <motion.div
+        className={`${events.hasNextPage ? 'mb-60' : 'mb-0'} grid h-fit w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+      >
+        {events?.map((event, index) => (
+          <motion.div
             key={event._id}
-            event={event}
-          />
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: index * 0.1 }}
+          >
+            <EventCards event={event} />
+          </motion.div>
         ))}
-      </div>
-      <div className='flex h-20 w-full flex-row items-center justify-center gap-40'>
-        <button
-          className='rounded-md bg-gray-800/90 px-4 py-2 text-xl  font-semibold text-white transition-colors duration-300 hover:bg-gray-800/70 disabled:cursor-default disabled:bg-gray-400'
-          disabled={!hasNextPage}
-          onClick={loadMore}
+      </motion.div>
+      {scrollLoading && (
+        <motion.div
+          className='fixed bottom-0 left-0 right-0 flex justify-center items-center pb-1 w-full h-80 backdrop-blur-sm bg-white/30'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
         >
-          Load More Events
-        </button>
-        <button
-          className='rounded-md bg-gray-800/90 px-4 py-2 text-xl  font-semibold text-white transition-colors duration-300 hover:bg-gray-800/70 disabled:cursor-default disabled:bg-gray-400'
-          disabled={!hasPrevPage}
-          onClick={loadLess}
-        >
-          Load Previous Events
-        </button>
-      </div>
+          <div className='grid min-h-[140px] w-full place-items-center overflow-x-scroll rounded-lg p-6 lg:overflow-visible'>
+            <svg
+              className='size-16 animate-spin text-white/50'
+              viewBox='0 0 64 64'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'
+              width='24'
+              height='24'
+            >
+              <path
+                d='M32 3C35.8083 3 39.5794 3.75011 43.0978 5.20749C46.6163 6.66488 49.8132 8.80101 52.5061 11.4939C55.199 14.1868 57.3351 17.3837 58.7925 20.9022C60.2499 24.4206 61 28.1917 61 32C61 35.8083 60.2499 39.5794 58.7925 43.0978C57.3351 46.6163 55.199 49.8132 52.5061 52.5061C49.8132 55.199 46.6163 57.3351 43.0978 58.7925C39.5794 60.2499 35.8083 61 32 61C28.1917 61 24.4206 60.2499 20.9022 58.7925C17.3837 57.3351 14.1868 55.199 11.4939 52.5061C8.801 49.8132 6.66487 46.6163 5.20749 43.0978C3.7501 39.5794 3 35.8083 3 32C3 28.1917 3.75011 24.4206 5.2075 20.9022C6.66489 17.3837 8.80101 14.1868 11.4939 11.4939C14.1868 8.80099 17.3838 6.66487 20.9022 5.20749C24.4206 3.7501 28.1917 3 32 3L32 3Z'
+                stroke='currentColor'
+                strokeWidth='5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+              />
+              <path
+                d='M32 3C36.5778 3 41.0906 4.08374 45.1692 6.16256C49.2477 8.24138 52.7762 11.2562 55.466 14.9605C58.1558 18.6647 59.9304 22.9531 60.6448 27.4748C61.3591 31.9965 60.9928 36.6232 59.5759 40.9762'
+                stroke='currentColor'
+                strokeWidth='5'
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                className='text-gray-800'
+              />
+            </svg>
+          </div>
+        </motion.div>
+      )}
     </>
   );
-};
 
+};
 Events.propTypes = {
   dispatch: PropTypes.func,
 };
