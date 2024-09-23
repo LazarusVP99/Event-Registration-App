@@ -13,7 +13,7 @@ const RadioSelect = ({ errors, touched, getFieldProps }) => {
   return (
     <div className='mt-2 flex flex-col items-start w-full gap-2'>
       <span className='text-gray-700 text-md'>Where did you hear about this event?</span>
-      <div className='flex items-center gap-5 text-md'>
+      <div className='flex flex-wrap items-center gap-5 text-md'>
         <div className='flex items-center gap-2'>
           <input
             type='radio'
@@ -52,14 +52,14 @@ const RadioSelect = ({ errors, touched, getFieldProps }) => {
           <input
             type='radio'
             name='eventSeeker'
-            id='eventSeeker-other'
+            id='eventSeeker-found'
             value='Found Myself'
             checked={checked === 'Found Myself'}
             onChange={handleRadioChange}
             className='cursor-pointer h-4 w-4 text-blue-600'
           />
           <label
-            htmlFor='eventSeeker-other'
+            htmlFor='eventSeeker-found'
             className='text-gray-700'
           >
             Found Myself

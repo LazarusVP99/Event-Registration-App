@@ -77,11 +77,12 @@ const ViewMembers = () => {
   return (
     <>
       <div className='relative m-3 sm:m-5 mb-8 sm:mb-16 lg:mb-0 w-full h-full flex flex-col items-center justify-center gap-4 sm:gap-8 lg:justify-between lg:items-start'>
-        <h1 className='text-xl w-full text-center lg:text-start text-gray-800 cursor-default font-semibold sm:text-3xl xl:text-4xl'>
-          <q>{event.title}</q> participants
+        <h1 className='text-base lg:text-xl w-full text-justify md:text-start text-gray-800 cursor-default font-semibold sm:text-3xl xl:text-4xl'>
+          <span className='block sm:inline'><q>{event.title}</q></span>
+          <span className='block sm:inline'> participants</span>
         </h1>
         <div className='flex flex-col w-full gap-3 sm:gap-5'>
-          <div className='flex flex-col md:flex-row w-80 md:w-fit gap-3 sm:gap-5 rounded-md bg-gray-800 p-3 sm:p-5'>
+          <div className='flex flex-col md:flex-row w-60 md:w-fit gap-3 sm:gap-5 rounded-md bg-gray-800 p-3 sm:p-5'>
             <div className='w-full sm:w-1/2'>
               <SearchBar
                 filters={(keyword) => filterByEmail(keyword, setFilter)}
@@ -104,7 +105,7 @@ const ViewMembers = () => {
           </div>
         </div>
       </div>
-      <div className='grid h-full max-h-60 grid-cols-1 place-items-center gap-y-4 sm:gap-y-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
+      <div className='grid w-72 md:w-full h-full max-h-60 grid-cols-1 place-items-center gap-y-4 sm:gap-y-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
         <AnimatePresence>
           {eventMembers.map(({ fullName, email, _id }) => (
             <motion.div
