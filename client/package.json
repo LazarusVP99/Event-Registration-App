@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:prod": "VITE_API_URL=https://event-registration-app-kvd7.onrender.com vite build",
-    "dev:netlify": "VITE_API_URL=/api vite --port 3001",
+    "build:prod": "cross-env VITE_API_URL=https://event-registration-app-kvd7.onrender.com vite build",
+    "dev:netlify": "cross-env VITE_API_URL=/api vite --port 3001",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -32,6 +32,7 @@
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.19",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
