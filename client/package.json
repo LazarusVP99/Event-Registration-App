@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:prod": "VITE_API_URL=https://event-registration-app-kvd7.onrender.com vite build",
+    "dev:netlify": "VITE_API_URL=/api vite --port 3001",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

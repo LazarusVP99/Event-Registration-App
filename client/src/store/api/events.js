@@ -24,7 +24,7 @@ export const eventsApi = createApi({
             }),
         }),
         getEventById: build.query({
-            query: ({ id }) =>  `events/${id}`,
+            query: ({ id }) =>  `${endpoints.events}/${id}`,
         }),
     }),
 });

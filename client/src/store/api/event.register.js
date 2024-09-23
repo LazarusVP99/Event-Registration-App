@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_URL } from '../../config/api';
+import { API_URL, endpoints } from '../../config/api';
 
 /**
  * User Registration Fetch
@@ -19,7 +19,7 @@ export const registerApi = createApi({
             query: (
                 { fullName, email, eventSeeker, dateOfBirth, eventId }
             ) => ({
-                url: 'users/register',
+                url: endpoints.userRegister,
                 method: 'POST',
                 body: JSON.stringify({
                     fullName, email, eventSeeker, dateOfBirth, eventId,
@@ -27,7 +27,7 @@ export const registerApi = createApi({
             }),
         }),
         getRegisteredEventMembers: build.query({
-            query: ({ eventId }) =>  `users/members/${eventId}`,
+            query: ({ eventId }) =>  `${endpoints.members}/${eventId}`,
         }),
     }),
 });

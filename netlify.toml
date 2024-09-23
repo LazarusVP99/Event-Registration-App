@@ -1,9 +1,9 @@
 [build]
   base = "client"
-  command = "npm run build"
+  command = "npm run build:prod"
   publish = "dist"
 
 [dev]
-  command = "npm run dev"
+  command = "npm run dev:netlify"
   targetPort = 3001
   publish = "dist"
