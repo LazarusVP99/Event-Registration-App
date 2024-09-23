@@ -5,3 +5,4 @@
 /client/dist-ssr
 /client/.gitignore
 /client/.eslintrc.cjs
+/server/.env
