@@ -6,3 +6,7 @@
 /client/.gitignore
 /client/.eslintrc.cjs
 /server/.env
+# Local Netlify folder
+.netlify
+netlify.toml
+/client/.prettierrc.json
