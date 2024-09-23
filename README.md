@@ -1,9 +1,19 @@
 # Event Registration App for ELIFTECH IT School Examination
 
-Deployed application is available at
-'''
-https://event-registration-app-1.onrender.com/
-'''
+## Deployed Application
+# Deployed Application
+
+The Event Registration App is live and accessible at:
+
+[https://event-registration-app-1.onrender.com/](https://event-registration-app-1.onrender.com/)
+
+## Important Note on Load Times
+
+This application is hosted on Render.com using their free tier service. Due to the nature of free tier hosting:
+
+- The application may take up to a few minutes to load after periods of inactivity.
+- Once loaded, the application will function with normal responsiveness.
+
 
 ## Instructions to run the application:
 
