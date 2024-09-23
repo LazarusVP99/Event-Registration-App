@@ -9,11 +9,15 @@ npm run dev
 
 ## Script to run server only
 cd server
+```
 npm run run:server
+```
 
 ## Script to run client only
 cd client
+```
 npm run run:client
+```
 
 ## Running the Event Fetching Script to fetch events from the API:
 
