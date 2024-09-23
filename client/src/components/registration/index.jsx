@@ -8,85 +8,108 @@ import { Validation, userSubmission } from './submit.js';
 import RadioSelect from './form_components/radio.jsx';
 
 import { useRegisteredUserMutation } from '../../store/api/event.register.js';
+import { useGetEventByIdQuery } from '../../store/api/events.js';
+
 const RegistrationForm = ({ dispatch }) => {
-  const eventId = useParams();
+  const { id } = useParams();
   const [registerUser] = useRegisteredUserMutation();
+  const { data: eventsData, isLoading } = useGetEventByIdQuery({ id });
+
   const onSubmitHandler = async (values) => userSubmission({ values, registerUser, dispatch });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  
+  const isEventExpired = new Date(eventsData?.endTime).getTime() < new Date();
+
   return (
     <div className='flex flex-col items-center justify-center w-screen min-h-screen bg-gray-800 shadow-sm shadow-white p-4'>
       <div className='border border-b-slate-300 rounded-t-md w-full p-4 md:p-5 max-w-lg text-center'>
         <h1 className='text-white text-3xl md:text-4xl mt-4 md:mt-6 font-bold text-center'>Event Registration Form</h1>
       </div>
-      <Formik
-        initialValues={{
-          email: '',
-          fullName: '',
-          eventSeeker: 'Other',
-          dateOfBirth: '',
-          eventId,
-        }}
-        validationSchema={Validation}
-        onSubmit={onSubmitHandler}
-      >
-        {({ errors, getFieldProps, touched, handleSubmit, isSubmitting }) => (
-          <Form
-            noValidate
-            onSubmit={handleSubmit}
-            className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg'
+      {isEventExpired ? (
+        <div className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg text-center'>
+          <p className='text-xl text-red-600 font-bold'>Registration for this event has closed.</p>
+          <Link
+            to='/'
+            className='mt-4 inline-block bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg'
           >
-            <div className='space-y-6 md:space-y-10'>
-              <FieldComponent
-                errors={errors}
-                touched={touched}
-                field='fullName'
-                getFieldProps={getFieldProps}
-              />
-
-              <FieldComponent
-                errors={errors}
-                touched={touched}
-                field='email'
-                getFieldProps={getFieldProps}
-              />
-
-              <div className='flex flex-col md:flex-row md:items-center md:gap-8'>
-                <span className='text-lg md:text-xl mb-2 md:mb-0'>Enter your birth date:</span>
+            Return to Events
+          </Link>
+        </div>
+      ) : (
+        <Formik
+          initialValues={{
+            email: '',
+            fullName: '',
+            eventSeeker: 'Other',
+            dateOfBirth: '',
+            eventId: id,
+          }}
+          validationSchema={Validation}
+          onSubmit={onSubmitHandler}
+        >
+          {({ errors, getFieldProps, touched, handleSubmit, isSubmitting }) => (
+            <Form
+              noValidate
+              onSubmit={handleSubmit}
+              className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg'
+            >
+              <div className='space-y-6 md:space-y-10'>
                 <FieldComponent
                   errors={errors}
                   touched={touched}
-                  type='date'
-                  field='dateOfBirth'
+                  field='fullName'
                   getFieldProps={getFieldProps}
                 />
+
+                <FieldComponent
+                  errors={errors}
+                  touched={touched}
+                  field='email'
+                  getFieldProps={getFieldProps}
+                />
+
+                <div className='flex flex-col md:flex-row md:items-center md:gap-8'>
+                  <span className='text-lg md:text-xl mb-2 md:mb-0'>Enter your birth date:</span>
+                  <FieldComponent
+                    errors={errors}
+                    touched={touched}
+                    type='date'
+                    field='dateOfBirth'
+                    getFieldProps={getFieldProps}
+                  />
+                </div>
               </div>
-            </div>
 
-            <hr className='w-full h-0.5 bg-stone-500 my-6 md:my-8' />
+              <hr className='w-full h-0.5 bg-stone-500 my-6 md:my-8' />
 
-            <RadioSelect
-              errors={errors}
-              touched={touched}
-              getFieldProps={getFieldProps}
-            />
+              <RadioSelect
+                errors={errors}
+                touched={touched}
+                getFieldProps={getFieldProps}
+              />
 
-            <div className='flex flex-col md:flex-row justify-between items-center mt-6 space-y-4 md:space-y-0'>
-              <button
-                type='submit'
-                disabled={isSubmitting}
-                className='w-full md:w-auto bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg capitalize disabled:bg-gray-400'
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit Registration'}
-              </button>
-              <Link
-                to='/'
-                className='w-full md:w-auto text-center hover:text-gray-800/75 uppercase text-neutral-900 font-semibold tracking-wide'
-              >
-                Return to Events
-              </Link>
-            </div>
-          </Form>
-        )}
-      </Formik>
+              <div className='flex flex-col md:flex-row justify-between items-center mt-6 space-y-4 md:space-y-0'>
+                <button
+                  type='submit'
+                  disabled={isSubmitting}
+                  className='w-full md:w-auto bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg capitalize disabled:bg-gray-400'
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Registration'}
+                </button>
+                <Link
+                  to='/'
+                  className='w-full md:w-auto text-center hover:text-gray-800/75 uppercase text-neutral-900 font-semibold tracking-wide'
+                >
+                  Return to Events
+                </Link>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      )}
     </div>
   );
 };

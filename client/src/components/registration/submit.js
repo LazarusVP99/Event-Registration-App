@@ -17,13 +17,17 @@ export const Validation = Yup.object({
 });
 
 export const userSubmission = async ({ values, registerUser, dispatch }) => {
-    const eventId = values.eventId.id;
+    const { eventId } = values;
     const { fullName, email, eventSeeker, dateOfBirth } = values;
     try {
+        console.log(values);
+
         if (eventId) {
             await registerUser({
                 fullName, email, eventSeeker, dateOfBirth, eventId,
             }).unwrap();
+
+            location.reload();
 
             dispatch(setEventData({
                 eventId,
@@ -35,6 +39,7 @@ export const userSubmission = async ({ values, registerUser, dispatch }) => {
                 text: 'Registration successful.',
                 icon: 'success',
             });
+
         } else {
             showSwal({
                 title: 'Error',
