@@ -3,14 +3,12 @@
 ## Instructions to run the application:
 
 cd server
-
 ```
 npm run dev
 ```
 
 ## Script to run server only
 cd server
-
 ```
 npm run run:server
 ```
