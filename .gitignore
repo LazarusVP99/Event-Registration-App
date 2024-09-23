@@ -8,3 +8,5 @@
 /server/.env
 # Local Netlify folder
 /client/.prettierrc.json
+# Local Netlify folder
+.netlify

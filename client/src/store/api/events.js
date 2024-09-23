@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
+import { API_URL, endpoints } from '../../config/api';
 /**
  * Available Events
  */
@@ -7,7 +7,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const eventsApi = createApi({
     reducerPath: 'availableEvents',
     baseQuery: fetchBaseQuery({
-        baseUrl: '/api/',
+        baseUrl: API_URL,
         prepareHeaders: (headers) => {
             headers.set('Content-Type', 'application/json');
             return headers;
@@ -16,7 +16,7 @@ export const eventsApi = createApi({
     endpoints: (build) => ({
         getPaginatedEvents: build.mutation({
             query: ({ limit, order, page, sort }) => ({
-                url: 'events/all',
+                url: endpoints.eventsAll,
                 method: 'POST',
                 body: {
                     limit, order, page, sort,
