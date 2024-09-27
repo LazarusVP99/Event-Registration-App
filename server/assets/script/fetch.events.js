@@ -1,5 +1,5 @@
 import fetchUrls from './api.urls.js';
-import Event from './models/event.model.js';
+import Event from '../models/event.model.js';
 
 export const fetchAndStoreEvents = async () => {
     try {
