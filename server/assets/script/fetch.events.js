@@ -1,3 +1,4 @@
+import axios from 'axios';
 import fetchUrls from './api.urls.js';
 import Event from '../models/event.model.js';
 
