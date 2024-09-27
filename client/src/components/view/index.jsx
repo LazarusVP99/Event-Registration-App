@@ -49,20 +49,29 @@ const ViewMembers = () => {
   useEffect(() => data && applyFilters({ data, filter, setEventMembers }), [filter, data]);
 
   if (isLoading) return <Spinner />;
-    if (
-      new Date(event.endTime).getTime() < new Date() ||
-      new Date(event.startTime).getTime() < new Date()
-    ) {
-      return (
-        <div className='flex w-full justify-center items-center h-screen'>
-          <div className='font-bold text-base sm:text-lg md:text-xl lg:text-2xl xl:text-4xl text-red-500 bg-red-100 p-2 shadow-md'>
-            Event has ended
-          </div>
-        </div>
-      );
-    }
 
-  if (isError) return <div>Error retrieving event members</div>;
+  if (new Date(event.endTime).getTime() < new Date()) {
+    return (
+      <div className='flex w-full justify-center items-center h-screen'>
+        <div className='font-bold text-base sm:text-lg md:text-xl lg:text-2xl xl:text-4xl text-red-500 bg-red-100 p-2 shadow-md'>
+          Event has ended
+        </div>
+      </div>
+    );
+  } else if (
+    new Date(event.startTime).getTime() <= new Date() &&
+    new Date(event.endTime).getTime() > new Date()
+  ) {
+    return (
+      <div className='flex w-full justify-center items-center h-screen'>
+        <div className='font-bold text-base sm:text-lg md:text-xl lg:text-2xl xl:text-4xl text-green-500 bg-green-100 p-2 shadow-md'>
+          Event is ongoing right now
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) return <div className="text-red-500 font-semibold text-center p-4">Error retrieving event members</div>;
 
   if (data.length === 0) return <EventsWithNoUsers event={event} />;
 
@@ -78,7 +87,9 @@ const ViewMembers = () => {
     <>
       <div className='relative m-3 sm:m-5 mb-8 sm:mb-16 lg:mb-0 w-full h-full flex flex-col items-center justify-center gap-4 sm:gap-8 lg:justify-between lg:items-start'>
         <h1 className='text-base lg:text-xl w-full text-justify md:text-start text-gray-800 cursor-default font-semibold sm:text-3xl xl:text-4xl'>
-          <span className='block sm:inline'><q>{event.title}</q></span>
+          <span className='block sm:inline'>
+            <q>{event.title}</q>
+          </span>
           <span className='block sm:inline'> participants</span>
         </h1>
         <div className='flex flex-col w-full gap-3 sm:gap-5'>
@@ -98,7 +109,7 @@ const ViewMembers = () => {
           </div>
         </div>
         <div className='flex flex-col sm:flex-row justify-between px-3 sm:items-start items-center md:items-stretch w-full'>
-            <EventCountdown event={event} />
+          <EventCountdown event={event} />
 
           <div className='lg:absolute relative lg:right-20 lg:top-20 w-full sm:w-80 lg:w-96 h-40 sm:h-48 lg:h-60 p-2 mr-1 sm:mr-2 lg:m-0'>
             {displayAmountOfUsersRegistered()}

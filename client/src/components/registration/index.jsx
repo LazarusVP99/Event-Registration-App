@@ -9,6 +9,7 @@ import RadioSelect from './form_components/radio.jsx';
 
 import { useRegisteredUserMutation } from '../../store/api/event.register.js';
 import { useGetEventByIdQuery } from '../../store/api/events.js';
+import Spinner from '../utils/spinner.jsx';
 
 const RegistrationForm = ({ dispatch }) => {
   const { id } = useParams();
@@ -17,27 +18,32 @@ const RegistrationForm = ({ dispatch }) => {
 
   const onSubmitHandler = async (values) => userSubmission({ values, registerUser, dispatch });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  
   const isEventExpired = new Date(eventsData?.endTime).getTime() < new Date();
+
+  const expiredOrActiveEvent = () => (
+    <div className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg text-center'>
+      <p className='text-xl text-red-600 font-bold'>
+        Event has expired or is not active.
+      </p>
+      <Link
+        to='/'
+        className='mt-4 inline-block bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg'
+      >
+        Return to Events
+      </Link>
+    </div>
+  );
+  if (isLoading) return <Spinner />;
 
   return (
     <div className='flex flex-col items-center justify-center w-screen min-h-screen bg-gray-800 shadow-sm shadow-white p-4'>
       <div className='border border-b-slate-300 rounded-t-md w-full p-4 md:p-5 max-w-lg text-center'>
-        <h1 className='text-white text-3xl md:text-4xl mt-4 md:mt-6 font-bold text-center'>Event Registration Form</h1>
+        <h1 className='text-white text-3xl md:text-4xl mt-4 md:mt-6 font-bold text-center'>
+          Event Registration Form
+        </h1>
       </div>
-      {isEventExpired ? (
-        <div className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg text-center'>
-          <p className='text-xl text-red-600 font-bold'>Registration for this event has closed.</p>
-          <Link
-            to='/'
-            className='mt-4 inline-block bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg'
-          >
-            Return to Events
-          </Link>
-        </div>
+      {isEventExpired  ? (
+        expiredOrActiveEvent()
       ) : (
         <Formik
           initialValues={{
