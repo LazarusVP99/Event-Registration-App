@@ -66,6 +66,6 @@ npm run run:client
 cd server
 
 ```
-npm run fetch-events
+npm run cron-fetch-events
 ```
 

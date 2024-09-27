@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cron from 'node-cron';
-import { fetchAndStoreEvents } from './fetch.events';
+import { fetchAndStoreEvents } from './fetch.events.js';
 
 dotenv.config();
 

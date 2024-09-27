@@ -33,4 +33,4 @@ const fetchUrls = [
             "expand": "event_sales_status,image,primary_venue,saves,ticket_availability,primary_organizer,public_collections"
         }
     }
-]
+];
