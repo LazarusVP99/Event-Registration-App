@@ -108,8 +108,8 @@ export const useInfiniteScroll = ({ object, pageData }) => {
                 dispatch(setCurrentPage(
                     { page, limit: limit + 12 }
                 ));
-                setScrollLoading(true);
 
+                setScrollLoading(true);
             }
         }, 500);
 
