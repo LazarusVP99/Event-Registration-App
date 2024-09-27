@@ -41,8 +41,8 @@ const Events = ({ dispatch }) => {
 
     void getEvents();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getPaginatedEvents, setEvents, currentPage]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getPaginatedEvents, setEvents, currentPage, setScrollLoading]);
 
   // Apply sorting to the events when onclick event fired
   const applySortHandler = () =>

@@ -1,6 +1,6 @@
 # Event Registration App for ELIFTECH IT School Examination
 
-# Deployed Application
+## Deployed Application
 
 The Event Registration App is live and accessible at:
 
@@ -35,7 +35,7 @@ This application is hosted on Render.com using their free tier service. Due to t
 - [x] Implemented a loading spinner for enhanced user experience during data fetching
 - [x] Integrated toast notifications for real-time feedback on user actions
 - [x] Added an event countdown timer on the event participants page
-- [x] Incorporated subtle animations and smooth transitions for improved visual appeal
+- [x] Incorporated subtle animations and smooth transitions for improved visual appearance
 - [x] Added a responsive design for approximate optimal viewing on various devices
 
 
