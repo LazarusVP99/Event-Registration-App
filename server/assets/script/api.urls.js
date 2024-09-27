@@ -34,3 +34,5 @@ const fetchUrls = [
         }
     }
 ];
+
+export default fetchUrls;
