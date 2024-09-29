@@ -7,7 +7,7 @@
   "scripts": {
     "cron-fetch-events": "node assets/script/cron.task.js",
     "run:client": "npm run dev --prefix ../client -- --host",
-    "run:server": "concurrently \"nodemon --watch assets --exec 'node assets/index.js'\" \"npm run cron-fetch-events\"",
+    "run:server": "concurrently \"node --watch assets/index.js\" \"npm run cron-fetch-events\"",
     "dev": "concurrently \"npm run run:client\" \"npm run run:server\"",
     "build": "node assets/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

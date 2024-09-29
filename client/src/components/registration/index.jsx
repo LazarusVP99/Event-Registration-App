@@ -6,13 +6,16 @@ import { Link, useParams } from 'react-router-dom';
 import FieldComponent from './form_components/field.jsx';
 import { Validation, userSubmission } from './submit.js';
 import RadioSelect from './form_components/radio.jsx';
+import DatePicker from 'react-datepicker';
 
 import { useRegisteredUserMutation } from '../../store/api/event.register.js';
 import { useGetEventByIdQuery } from '../../store/api/events.js';
 import Spinner from '../utils/spinner.jsx';
+import { useState } from 'react';
 
 const RegistrationForm = ({ dispatch }) => {
   const { id } = useParams();
+  const [startTime, setStartTime] = useState(new Date());
   const [registerUser] = useRegisteredUserMutation();
   const { data: eventsData, isLoading } = useGetEventByIdQuery({ id });
 
@@ -22,9 +25,7 @@ const RegistrationForm = ({ dispatch }) => {
 
   const expiredOrActiveEvent = () => (
     <div className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg text-center'>
-      <p className='text-xl text-red-600 font-bold'>
-        Event has expired or is not active.
-      </p>
+      <p className='text-xl text-red-600 font-bold'>Event has expired or is not active.</p>
       <Link
         to='/'
         className='mt-4 inline-block bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg'
@@ -42,7 +43,7 @@ const RegistrationForm = ({ dispatch }) => {
           Event Registration Form
         </h1>
       </div>
-      {isEventExpired  ? (
+      {isEventExpired ? (
         expiredOrActiveEvent()
       ) : (
         <Formik
@@ -79,12 +80,17 @@ const RegistrationForm = ({ dispatch }) => {
 
                 <div className='flex flex-col md:flex-row md:items-center md:gap-8'>
                   <span className='text-lg md:text-xl mb-2 md:mb-0'>Enter your birth date:</span>
-                  <FieldComponent
+                  {/* <FieldComponent
                     errors={errors}
                     touched={touched}
                     type='date'
                     field='dateOfBirth'
                     getFieldProps={getFieldProps}
+                  /> */}
+                  <DatePicker
+                    name='dateOfBirth'
+                    selected={startTime}
+                    onChange={(date) => setStartTime(date)}
                   />
                 </div>
               </div>
