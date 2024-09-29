@@ -33,7 +33,6 @@ const Events = ({ dispatch }) => {
     const getEvents = async () =>
       getEventCards({
         currentPage,
-        events,
         getPaginatedEvents,
         setScrollLoading,
         setEvents,
@@ -41,7 +40,6 @@ const Events = ({ dispatch }) => {
 
     void getEvents();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getPaginatedEvents, setEvents, currentPage, setScrollLoading]);
 
   // Apply sorting to the events when onclick event fired
