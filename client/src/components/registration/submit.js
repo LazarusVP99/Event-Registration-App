@@ -24,6 +24,8 @@ export const Validation = Yup.object({
 export const userSubmission = async ({ values, registerUser, dispatch }) => {
     const { eventId } = values;
     const { fullName, email, eventSeeker, dateOfBirth } = values;
+    console.log(dateOfBirth);
+    
     try {
         if (eventId) {
             await registerUser({

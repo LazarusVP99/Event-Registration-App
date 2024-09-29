@@ -3,19 +3,16 @@ import { Form, Formik } from 'formik';
 
 import { Link, useParams } from 'react-router-dom';
 
-import FieldComponent from './form_components/field.jsx';
+import { DatePickerField, FieldComponent } from './form_components/field.jsx';
 import { Validation, userSubmission } from './submit.js';
 import RadioSelect from './form_components/radio.jsx';
-import DatePicker from 'react-datepicker';
 
 import { useRegisteredUserMutation } from '../../store/api/event.register.js';
 import { useGetEventByIdQuery } from '../../store/api/events.js';
 import Spinner from '../utils/spinner.jsx';
-import { useState } from 'react';
 
 const RegistrationForm = ({ dispatch }) => {
   const { id } = useParams();
-  const [startTime, setStartTime] = useState(new Date());
   const [registerUser] = useRegisteredUserMutation();
   const { data: eventsData, isLoading } = useGetEventByIdQuery({ id });
 
@@ -57,7 +54,7 @@ const RegistrationForm = ({ dispatch }) => {
           validationSchema={Validation}
           onSubmit={onSubmitHandler}
         >
-          {({ errors, getFieldProps, touched, handleSubmit, isSubmitting }) => (
+          {({ errors, getFieldProps, touched, setFieldValue, handleSubmit, isSubmitting }) => (
             <Form
               noValidate
               onSubmit={handleSubmit}
@@ -78,19 +75,13 @@ const RegistrationForm = ({ dispatch }) => {
                   getFieldProps={getFieldProps}
                 />
 
-                <div className='flex flex-col md:flex-row md:items-center md:gap-8'>
-                  <span className='text-lg md:text-xl mb-2 md:mb-0'>Enter your birth date:</span>
-                  {/* <FieldComponent
+                <div className='flex flex-col md:flex-row md:items-start justify-normal'>
+                  <span className='text-lg md:text-xl w-[390px] mt-2'>Enter your birth date:</span>
+                  <DatePickerField
+                    field='dateOfBirth'
                     errors={errors}
                     touched={touched}
-                    type='date'
-                    field='dateOfBirth'
-                    getFieldProps={getFieldProps}
-                  /> */}
-                  <DatePicker
-                    name='dateOfBirth'
-                    selected={startTime}
-                    onChange={(date) => setStartTime(date)}
+                    setFieldValue={setFieldValue}
                   />
                 </div>
               </div>
