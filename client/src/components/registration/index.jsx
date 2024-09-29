@@ -3,7 +3,7 @@ import { Form, Formik } from 'formik';
 
 import { Link, useParams } from 'react-router-dom';
 
-import FieldComponent from './form_components/field.jsx';
+import { DatePickerField, FieldComponent } from './form_components/field.jsx';
 import { Validation, userSubmission } from './submit.js';
 import RadioSelect from './form_components/radio.jsx';
 
@@ -22,9 +22,7 @@ const RegistrationForm = ({ dispatch }) => {
 
   const expiredOrActiveEvent = () => (
     <div className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg text-center'>
-      <p className='text-xl text-red-600 font-bold'>
-        Event has expired or is not active.
-      </p>
+      <p className='text-xl text-red-600 font-bold'>Event has expired or is not active.</p>
       <Link
         to='/'
         className='mt-4 inline-block bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg'
@@ -42,7 +40,7 @@ const RegistrationForm = ({ dispatch }) => {
           Event Registration Form
         </h1>
       </div>
-      {isEventExpired  ? (
+      {isEventExpired ? (
         expiredOrActiveEvent()
       ) : (
         <Formik
@@ -56,7 +54,7 @@ const RegistrationForm = ({ dispatch }) => {
           validationSchema={Validation}
           onSubmit={onSubmitHandler}
         >
-          {({ errors, getFieldProps, touched, handleSubmit, isSubmitting }) => (
+          {({ errors, getFieldProps, touched, setFieldValue, handleSubmit, isSubmitting }) => (
             <Form
               noValidate
               onSubmit={handleSubmit}
@@ -77,14 +75,13 @@ const RegistrationForm = ({ dispatch }) => {
                   getFieldProps={getFieldProps}
                 />
 
-                <div className='flex flex-col md:flex-row md:items-center md:gap-8'>
-                  <span className='text-lg md:text-xl mb-2 md:mb-0'>Enter your birth date:</span>
-                  <FieldComponent
+                <div className='flex flex-col md:flex-row md:items-start justify-normal'>
+                  <span className='text-lg md:text-xl w-[390px] mt-2'>Enter your birth date:</span>
+                  <DatePickerField
+                    field='dateOfBirth'
                     errors={errors}
                     touched={touched}
-                    type='date'
-                    field='dateOfBirth'
-                    getFieldProps={getFieldProps}
+                    setFieldValue={setFieldValue}
                   />
                 </div>
               </div>
