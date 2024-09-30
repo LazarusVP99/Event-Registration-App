@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { PropTypes } from 'prop-types';
 import { motion } from 'framer-motion';
+import { PropTypes } from 'prop-types';
 
 import EventCards from './event_components/event_cards';
 import SortCards from './event_components/sort_cards';
@@ -39,7 +39,6 @@ const Events = ({ dispatch }) => {
       });
 
     void getEvents();
-
   }, [getPaginatedEvents, setEvents, currentPage, setScrollLoading]);
 
   // Apply sorting to the events when onclick event fired
@@ -74,7 +73,7 @@ const Events = ({ dispatch }) => {
             key={event._id}
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2, delay: index * 0.1 }}
+            transition={{ duration: 0.2, delay: index * 0.02 }}
           >
             <EventCards event={event} />
           </motion.div>
@@ -117,7 +116,6 @@ const Events = ({ dispatch }) => {
       )}
     </>
   );
-
 };
 Events.propTypes = {
   dispatch: PropTypes.func,
