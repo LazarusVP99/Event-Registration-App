@@ -6,8 +6,9 @@ import { fetchAndStoreEvents } from './fetch.events.js';
 dotenv.config();
 
 async function startEventFetcher () {
-    await mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}${process.env.DB_CREDENTIALS}&appName=data-0`);
-    console.log(`Connecting to MongoDB...`);
+    await mongoose.connect(`mongodb+srv://vladvip8acc041022:pSzFKk5vfOG7kt2J@data-0.um1kono.mongodb.net/?retryWrites=true&w=majority&appName=data-0`)
+        .then(() => console.log('Successfully connected to MongoDB'))
+        .catch(err => console.error('Connection error', err));
 
     await fetchAndStoreEvents();
 
@@ -16,5 +17,4 @@ async function startEventFetcher () {
         await fetchAndStoreEvents()
     });
 }
-
 startEventFetcher();

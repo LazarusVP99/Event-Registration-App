@@ -1,6 +1,9 @@
 import axios from 'axios';
-import fetchUrls from './api.urls.js';
+
 import Event from '../models/event.model.js';
+import fetchUrls from './api.urls.js';
+
+
 
 export const fetchAndStoreEvents = async () => {
     try {
@@ -9,17 +12,22 @@ export const fetchAndStoreEvents = async () => {
                 fetchConfig.url,
                 { params: fetchConfig.params }
             );
-            const events = response.data.events
+            const events = response.data.events;
 
             for (const event of events) {
+                const organizer = event.primary_organizer?.name
+                    || 'Unknown Organizer';
                 await Event.findOneAndUpdate(
-                    { title: event.name },
+                    {
+                        title: event.name,
+                    },
                     {
                         title: event.name,
                         description: event.summary,
                         startTime: event.start_date,
                         endTime: event.end_date,
-                        organizer: event.tickets_by
+                        organizer,
+
                     },
                     { upsert: true, new: true }
                 );
