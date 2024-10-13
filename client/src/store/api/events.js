@@ -14,13 +14,11 @@ export const eventsApi = createApi({
         },
     }),
     endpoints: (build) => ({
-        getPaginatedEvents: build.mutation({
+        getPaginatedEvents: build.query({
             query: ({ limit, order, page, sort }) => ({
                 url: endpoints.eventsAll,
-                method: 'POST',
-                body: {
-                    limit, order, page, sort,
-                },
+                method: 'GET',
+                params: { limit, order, page, sort },
             }),
         }),
         getEventById: build.query({
@@ -29,6 +27,6 @@ export const eventsApi = createApi({
     }),
 });
 
-export const { useGetPaginatedEventsMutation, useGetEventByIdQuery } = eventsApi;
+export const { useLazyGetPaginatedEventsQuery, useGetEventByIdQuery } = eventsApi;
 
 export default eventsApi;

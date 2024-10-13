@@ -9,7 +9,6 @@ import storage from 'redux-persist/lib/storage';
 import registerApi from './api/event.register';
 import eventsApi from './api/events';
 import currentPageSlice from './features/currentPage';
-import eventDataSlice from './features/eventData';
 import sortEventsSlice from './features/sortEvents';
 
 const persistConfig = {
@@ -19,7 +18,6 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, combineReducers({
-    eventData: eventDataSlice,
     sortEvents: sortEventsSlice,
     currentPage: currentPageSlice,
     [registerApi.reducerPath]: registerApi.reducer,

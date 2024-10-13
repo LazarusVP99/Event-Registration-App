@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import { setEventData } from '../../store/features/eventData';
 import showSwal from '../utils/alerts/message';
 
 export const Validation = Yup.object({
@@ -21,20 +20,20 @@ export const Validation = Yup.object({
         .min(new Date('1900-01-01'), 'You can not be that old'),
 });
 
-export const userSubmission = async ({ values, registerUser, dispatch }) => {
+export const userSubmission = async ({ values, registerUser, }) => {
     const { eventId } = values;
     const { fullName, email, eventSeeker, dateOfBirth } = values;
 
     try {
         if (eventId) {
             await registerUser({
-                fullName, email, eventSeeker, dateOfBirth, eventId,
+                fullName, email, eventSeeker, dateOfBirth, eventId, registrations: {
+                    [eventId]: {
+                        [new Date().getTime()]: [fullName]
+                    },
+                }
             }).unwrap();
 
-            dispatch(setEventData({
-                eventId,
-                registeredUsers: [fullName],
-            }));
 
             showSwal({
                 title: 'Successfully registered on event',
@@ -51,10 +50,10 @@ export const userSubmission = async ({ values, registerUser, dispatch }) => {
                 icon: 'error',
             });
         }
-    } catch (error) {
+    } catch ({ data }) {
         showSwal({
             title: 'Registration Failed',
-            text: 'An unexpected error occurred during registration. Please try again later',
+            text: data.error || 'An error occurred during registration.',
             icon: 'error',
         });
     }

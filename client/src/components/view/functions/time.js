@@ -1,12 +1,11 @@
+export const formatDate = date => new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+});
 
-const date = new Date();
-const clonedDate = new Date(date.getTime());
+export const pastFiveDaysTimestamps = day => new Date(new Date().setDate(new Date().getDate() - day)).setHours(0, 0, 0, 0)
 
-export const startOfDay =new Date(new Date().setHours(0, 0, 0, 0)).getTime();
-export const yesterday = new Date(clonedDate.setFullYear(clonedDate.getFullYear(), clonedDate.getMonth(), clonedDate.getDate() - 1));
-const endOfDay = new Date(new Date().setHours(23, 59, 59, 999)).getTime();
+export const filterRegistrationsWithinDateRange = (usersTimestamp, nextDay, pastDay) =>
+    usersTimestamp.filter((timestamp) => timestamp <= pastFiveDaysTimestamps(nextDay) && timestamp >= pastFiveDaysTimestamps(pastDay));
 
-export const pastTimestamp = (usersTimestamp) => usersTimestamp.filter((timestamp) => timestamp <= startOfDay);
-export const filterRegistrationsWithinDay = (usersTimestamp) => usersTimestamp.filter(
-    (timestamp) => timestamp >= startOfDay && timestamp <= endOfDay
-);

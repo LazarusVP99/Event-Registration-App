@@ -19,19 +19,16 @@ import Spinner from '../utils/spinner';
 
 import { applyFilters, filterByEmail, filterByName, initialFilters } from './functions/filters.js';
 import { useGetRegisteredEventMembersQuery } from '../../store/api/event.register';
-import { selectRegisteredUsers } from '../../store/features/eventData.js';
 import EventsWithNoUsers from './view_components/default.jsx';
 import { useGetEventByIdQuery } from '../../store/api/events';
 import EventCountdown from './view_components/countdown.jsx';
-import { chartData, options } from './functions/charts.js';
-import { useSelector } from 'react-redux';
+import { chartData, options } from './functions/chart.js';
 
 const ViewMembers = () => {
   const { id } = useParams();
-  const [event, setEvent] = useState([]);
+  const [event, setEvent] = useState({});
   const [eventMembers, setEventMembers] = useState([]);
   const [filter, setFilter] = useState(initialFilters);
-  const usersEventTimestampObject = useSelector(selectRegisteredUsers);
   const { data: eventsData } = useGetEventByIdQuery({ id });
   const { data, isLoading, isError } = useGetRegisteredEventMembersQuery({
     eventId: id,
@@ -40,38 +37,39 @@ const ViewMembers = () => {
   ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
   const usersTimestamp =
-    (usersEventTimestampObject[id] && Object.keys(usersEventTimestampObject[id]).map(Number)) ?? [];
+    data &&
+    data.flatMap(
+      (timestamp) =>
+        (timestamp.registrations[id] && Object.keys(timestamp.registrations[id]).map(Number)) || []
+    );
 
-  const chartProps = chartData(usersEventTimestampObject, usersTimestamp, id);
+  const usersTimestampChartData = data && data.map((e) => e.registrations[id]);
+  const chartProps = chartData(usersTimestampChartData, usersTimestamp);
 
   useEffect(() => data && setEventMembers(data), [data]);
   useEffect(() => eventsData && setEvent(eventsData), [eventsData]);
   useEffect(() => data && applyFilters({ data, filter, setEventMembers }), [filter, data]);
 
-  if (isLoading) return <Spinner />;
-
-  if (new Date(event.endTime).getTime() < new Date()) {
+  if (eventsData && (eventsData.time === 'over' || eventsData.time === 'ongoing')) {
+    const isOver = eventsData.time === 'over';
     return (
-      <div className='flex w-full justify-center items-center h-screen'>
-        <div className='font-bold text-base sm:text-lg md:text-xl lg:text-2xl xl:text-4xl text-red-500 bg-red-100 p-2 shadow-md'>
-          Event has ended
-        </div>
-      </div>
-    );
-  } else if (
-    new Date(event.startTime).getTime() <= new Date() &&
-    new Date(event.endTime).getTime() > new Date()
-  ) {
-    return (
-      <div className='flex w-full justify-center items-center h-screen'>
-        <div className='font-bold text-base sm:text-lg md:text-xl lg:text-2xl xl:text-4xl text-green-500 bg-green-100 p-2 shadow-md'>
-          Event is ongoing right now
+      <div className='flex w-full justify-center items-center min-h-screen p-4'>
+        <div
+          className={`font-bold text-base sm:text-lg md:text-xl lg:text-2xl xl:text-4xl ${isOver ? 'text-red-500 bg-red-100' : 'text-green-500 bg-green-100'} p-4 shadow-md rounded-lg text-center`}
+        >
+          {eventsData.message}
         </div>
       </div>
     );
   }
 
-  if (isError) return <div className="text-red-500 font-semibold text-center p-4">Error retrieving event members</div>;
+  if (isLoading) return <Spinner />;
+  if (isError)
+    return (
+      <div className='text-red-500 font-semibold text-center p-4'>
+        Error retrieving event members
+      </div>
+    );
 
   if (data.length === 0) return <EventsWithNoUsers event={event} />;
 
@@ -79,62 +77,66 @@ const ViewMembers = () => {
     <Line
       options={options}
       data={chartProps}
-      className='border border-gray-800 w-full h-full'
+      className='border border-gray-800 w-full h-full bg-white'
     />
   );
 
   return (
-    <>
-      <div className='relative m-3 sm:m-5 mb-8 sm:mb-16 lg:mb-0 w-full h-full flex flex-col items-center justify-center gap-4 sm:gap-8 lg:justify-between lg:items-start'>
-        <h1 className='text-base lg:text-xl w-full text-justify md:text-start text-gray-800 cursor-default font-semibold sm:text-3xl xl:text-4xl'>
-          <span className='block sm:inline'>
-            <q>{event.title}</q>
+    <div className='flex flex-col gap-8 h-full mx-5 my-2'>
+      <div className='flex flex-col items-center lg:items-start gap-8 h-auto lg:h-[420px]'>
+        <h1 className='text-xl sm:text-2xl lg:text-4xl text-center lg:text-left text-gray-800 font-bold'>
+          <span className='block lg:inline'>
+            <q className='italic'>{event.title}</q>
           </span>
-          <span className='block sm:inline'> participants</span>
+          <span className='block lg:inline ml-0 lg:ml-2'>participants</span>
         </h1>
-        <div className='flex flex-col w-full gap-3 sm:gap-5'>
-          <div className='flex flex-col md:flex-row w-60 md:w-fit gap-3 sm:gap-5 rounded-md bg-gray-800 p-3 sm:p-5'>
-            <div className='w-full sm:w-1/2'>
-              <SearchBar
-                filters={(keyword) => filterByEmail(keyword, setFilter)}
-                search={'Email'}
-              />
-            </div>
-            <div className='w-full sm:w-1/2'>
-              <SearchBar
-                filters={(keyword) => filterByName(keyword, setFilter)}
-                search={'Name'}
-              />
-            </div>
+
+        <div className='flex flex-col 2xl:flex-row gap-2 bg-gray-800 p-6 rounded-lg shadow-lg w-full md:w-fit'>
+          <div className='w-full md:w-[400px]'>
+            <SearchBar
+              filters={(keyword) => filterByEmail(keyword, setFilter)}
+              search={'Email'}
+            />
+          </div>
+          <div className='w-full md:w-1/2'>
+            <SearchBar
+              filters={(keyword) => filterByName(keyword, setFilter)}
+              search={'Name'}
+            />
           </div>
         </div>
-        <div className='flex flex-col sm:flex-row justify-between px-3 sm:items-start items-center md:items-stretch w-full'>
-          <EventCountdown event={event} />
+        <div className='flex flex-col lg:flex-row w-full gap-8'>
+          <div className='w-full lg:w-1/2'>
+            <EventCountdown event={event} />
+          </div>
 
-          <div className='lg:absolute relative lg:right-20 lg:top-20 w-full sm:w-80 lg:w-96 h-40 sm:h-48 lg:h-60 p-2 mr-1 sm:mr-2 lg:m-0'>
-            {displayAmountOfUsersRegistered()}
+          <div className='block lg:absolute top-20 right-5 w-full lg:w-[650px] h-64 sm:h-[250px] md:h-[300px] lg:h-[350px] bg-white'>
+            <div className='bg-gray-800 h-full p-4 rounded-lg shadow-lg border-gray-700 border'>
+              <div className='w-full h-full'>
+                {displayAmountOfUsersRegistered()}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div className='grid w-72 md:w-full h-full max-h-60 grid-cols-1 place-items-center gap-y-4 sm:gap-y-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 min-h-40'>
         <AnimatePresence>
           {eventMembers.map(({ fullName, email, _id }) => (
             <motion.div
-              layout
               key={_id}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.2 }}
-              className='flex h-36 sm:h-40 w-[95%] sm:w-[93%] flex-col items-center justify-center gap-3 sm:gap-5 rounded-lg border border-gray-200 bg-white p-3 sm:p-4 shadow-md dark:border-gray-600 dark:bg-gray-800'
+              className='flex flex-col items-center justify-center gap-4 rounded-lg border border-gray-200 bg-white p-6 shadow-md dark:border-gray-600 dark:bg-gray-800 dark:shadow-gray-700'
             >
-              <h5 className='text-base sm:text-lg font-medium text-gray-900 xl:text-2xl dark:text-white'>
+              <h5 className='text-2xl font-semibold text-gray-900 dark:text-white text-center'>
                 <HighlightText
                   query={fullName}
                   highlight={filter.nameSearch}
                 />
               </h5>
-              <span className='text-sm sm:text-base lg:text-lg text-gray-500 xl:text-xl dark:text-gray-400'>
+              <span className='text-lg text-gray-500 dark:text-gray-400 text-center break-all'>
                 <HighlightText
                   query={email}
                   highlight={filter.emailSearch}
@@ -144,8 +146,7 @@ const ViewMembers = () => {
           ))}
         </AnimatePresence>
       </div>
-    </>
+    </div>
   );
 };
-
 export default ViewMembers;

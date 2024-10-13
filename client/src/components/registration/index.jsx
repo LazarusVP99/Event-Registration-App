@@ -1,4 +1,3 @@
-import { PropTypes } from 'prop-types';
 import { Form, Formik } from 'formik';
 
 import { Link, useParams } from 'react-router-dom';
@@ -11,14 +10,12 @@ import { useRegisteredUserMutation } from '../../store/api/event.register.js';
 import { useGetEventByIdQuery } from '../../store/api/events.js';
 import Spinner from '../utils/spinner.jsx';
 
-const RegistrationForm = ({ dispatch }) => {
+const RegistrationForm = () => {
   const { id } = useParams();
   const [registerUser] = useRegisteredUserMutation();
   const { data: eventsData, isLoading } = useGetEventByIdQuery({ id });
 
-  const onSubmitHandler = async (values) => userSubmission({ values, registerUser, dispatch });
-
-  const isEventExpired = new Date(eventsData?.endTime).getTime() < new Date();
+  const onSubmitHandler = async (values) => userSubmission({ values, registerUser });
 
   const expiredOrActiveEvent = () => (
     <div className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg text-center'>
@@ -31,6 +28,7 @@ const RegistrationForm = ({ dispatch }) => {
       </Link>
     </div>
   );
+
   if (isLoading) return <Spinner />;
 
   return (
@@ -40,7 +38,7 @@ const RegistrationForm = ({ dispatch }) => {
           Event Registration Form
         </h1>
       </div>
-      {isEventExpired ? (
+      {eventsData?.time === 'over' ? (
         expiredOrActiveEvent()
       ) : (
         <Formik
@@ -117,8 +115,8 @@ const RegistrationForm = ({ dispatch }) => {
   );
 };
 
-RegistrationForm.propTypes = {
-  dispatch: PropTypes.func.isRequired,
-};
+// RegistrationForm.propTypes = {
+//   dispatch: PropTypes.func.isRequired,
+// };
 
 export default RegistrationForm;

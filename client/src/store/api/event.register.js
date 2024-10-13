@@ -17,12 +17,12 @@ export const registerApi = createApi({
     endpoints: (build) => ({
         registeredUser: build.mutation({
             query: (
-                { fullName, email, eventSeeker, dateOfBirth, eventId }
+                { fullName, email, eventSeeker, dateOfBirth, eventId, registrations }
             ) => ({
                 url: endpoints.userRegister,
                 method: 'POST',
                 body: JSON.stringify({
-                    fullName, email, eventSeeker, dateOfBirth, eventId,
+                    fullName, email, eventSeeker, dateOfBirth, eventId, registrations
                 })
             }),
         }),
