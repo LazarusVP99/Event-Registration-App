@@ -7,7 +7,7 @@ routes.route('/')
     .post(eventsHandler.createEvent)
 
 routes.route('/all')
-    .post(eventsHandler.getPaginatedEvents);
+    .get(eventsHandler.getPaginatedEvents);
 
 routes.route('/:id')
     .get(eventsHandler.getEventById)

@@ -11,23 +11,34 @@ const userRegistrationHandler = {
         res.status(200).json(users);
     }),
     eventRegistration: maestro(async (req, res) => {
-        const { email, eventId } = req.body;
+        const { email, eventId, registrations } = req.body;
+
         if (!eventId) {
             res.status(400).json({ message: "Event ID is required" });
+        }
+
+        if (!registrations || typeof registrations !== 'object') {
+            res.status(400).json({ error: 'Invalid input data' });
         }
 
         let user = await User.findOne({ email });
 
         if (!user) {
-            user = new User({ email, ...req.body });
+            user = new User({ email, registrations, ...req.body });
             user.eventsParticipant.push(eventId);
         } else {
-            // If the user has already registered for the event
-            if (!user.eventsParticipant.some((id) => id.equals(eventId))) {
-                user.eventsParticipant.push(eventId);
-            } else {
-                res.status(400).json({ message: "Already registered" });
-            }
+            Object.entries(registrations).forEach(([eventId, eventRegistrations]) => {
+                if (!user.registrations.has(eventId)) user.registrations.set(eventId, new Map());
+
+                Object.entries(eventRegistrations).forEach(([timestamp, names]) => {
+                    const existingNames = user.registrations.get(eventId).get(timestamp) || [];
+                    user.registrations.get(eventId).set(timestamp, [...new Set([...existingNames, ...names])]);
+                });
+
+                return !user.eventsParticipant.includes(eventId)
+                    ? user.eventsParticipant.push(eventId)
+                    : res.status(400).json({ error: 'User already registered for this event' });
+            });
         }
 
         const savedUser = await user.save();

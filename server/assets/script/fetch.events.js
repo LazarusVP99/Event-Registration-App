@@ -3,8 +3,6 @@ import axios from 'axios';
 import Event from '../models/event.model.js';
 import fetchUrls from './api.urls.js';
 
-
-
 export const fetchAndStoreEvents = async () => {
     try {
         for (const fetchConfig of fetchUrls) {

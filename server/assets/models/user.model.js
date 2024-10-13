@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import validator from 'validator'
+import validator from 'validator';
 
 const userSchema = new Schema({
   fullName: {
@@ -41,6 +41,14 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Event'
   }],
+  registrations: {
+    type: Map,
+    of: {
+      type: Map,
+      of: [String],
+    },
+    required: true,
+  }
 })
 
 userSchema.statics.emailTaken = async function (email) {
