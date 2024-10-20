@@ -15,12 +15,9 @@ export const Validation = Yup.object({
     dateOfBirth: Yup
         .date()
         .required('Date of birth is required')
-        .nullable()
-        .max(new Date(), 'Date of birth cannot be in the future')
-        .min(new Date('1900-01-01'), 'You can not be that old'),
 });
 
-export const userSubmission = async ({ values, registerUser, }) => {
+export const userSubmission = async ({ values, registerUser, refetch }) => {
     const { eventId } = values;
     const { fullName, email, eventSeeker, dateOfBirth } = values;
 
@@ -33,15 +30,13 @@ export const userSubmission = async ({ values, registerUser, }) => {
                     },
                 }
             }).unwrap();
-
+            refetch();
 
             showSwal({
                 title: 'Successfully registered on event',
                 text: 'Registration successful.',
                 icon: 'success',
             });
-
-            location.reload();
 
         } else {
             showSwal({

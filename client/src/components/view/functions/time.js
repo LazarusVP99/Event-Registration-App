@@ -8,4 +8,3 @@ export const pastFiveDaysTimestamps = day => new Date(new Date().setDate(new Dat
 
 export const filterRegistrationsWithinDateRange = (usersTimestamp, nextDay, pastDay) =>
     usersTimestamp.filter((timestamp) => timestamp <= pastFiveDaysTimestamps(nextDay) && timestamp >= pastFiveDaysTimestamps(pastDay));
-

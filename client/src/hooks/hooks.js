@@ -1,9 +1,9 @@
-
 import {
     useCallback, useEffect, useRef, useState
 } from "react";
 import { useDispatch } from "react-redux";
 import { setCurrentPage } from "../store/features/currentPage";
+
 
 /**
  * Custom hook that manages the countdown timer for an event.
@@ -105,9 +105,8 @@ export const useInfiniteScroll = ({ object, pageData }) => {
                 && hasNextPage
                 && scrollDirection === 'down') {
                 scrollPositionBeforeLoad.current = scrollTop;
-                dispatch(setCurrentPage(
-                    { page, limit: limit + 12 }
-                ));
+
+                dispatch(setCurrentPage({ page, limit: limit + 12 }));
 
                 setScrollLoading(true);
             }

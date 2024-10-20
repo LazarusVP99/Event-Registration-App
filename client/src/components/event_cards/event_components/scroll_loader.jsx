@@ -1,17 +1,17 @@
-import { PropTypes } from 'prop-types';
 import { motion } from 'framer-motion';
+import { PropTypes } from 'prop-types';
 
 const ScrollLoader = ({ loader }) =>
   loader && (
     <motion.div
-      className='fixed bottom-0 left-0 right-0 flex justify-center items-center pb-1 w-full h-80 backdrop-blur-sm bg-white/30'
+      className='~/lg:~h-36/72 fixed inset-x-0 bottom-0 flex w-full items-center justify-center bg-white/30 pb-1 backdrop-blur-sm'
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      <div className='grid min-h-[140px] w-full place-items-center overflow-x-scroll rounded-lg p-6 lg:overflow-visible'>
+      <div className='grid h-96 w-full place-items-center overflow-x-scroll rounded-lg p-6 lg:overflow-visible'>
         <svg
-          className='size-16 animate-spin text-white/50'
+          className='~/2xl:~size-8/16 animate-spin text-white/50'
           viewBox='0 0 64 64'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'

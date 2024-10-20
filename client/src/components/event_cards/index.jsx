@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { PropTypes } from 'prop-types';
 
@@ -10,7 +10,6 @@ import { useLazyGetPaginatedEventsQuery } from '../../store/api/events';
 import { getCurrentPage } from '../../store/features/currentPage';
 import { getSortedEvents } from '../../store/features/sortEvents';
 import ScrollLoader from './event_components/scroll_loader';
-import { applySort } from './event_logic/sort.handlers';
 import { useInfiniteScroll } from '../../hooks/hooks';
 import getEventCards from './event_logic/get.events';
 import { useSelector } from 'react-redux';
@@ -37,25 +36,14 @@ const Events = ({ dispatch }) => {
     const getEvents = async () =>
       getEventCards({
         currentPage,
+        sortValue,
         getPaginatedEvents,
         setScrollLoading,
         setEvents,
       });
 
     void getEvents();
-  }, [getPaginatedEvents, setEvents, currentPage, setScrollLoading]);
-
-  // Apply sorting to the events when onclick event fired
-  const applySortHandler = useCallback(
-    () =>
-      applySort({
-        currentPage,
-        sortValue,
-        setEvents,
-        getPaginatedEvents,
-      }),
-    [currentPage, getPaginatedEvents, sortValue]
-  );
+  }, [getPaginatedEvents, setEvents, sortValue, currentPage, setScrollLoading]);
 
   if (isLoading && events.length === 0) return <Spinner />;
   if (isError) return <div className='text-xl font-bold text-red-600'>Error</div>;
@@ -63,13 +51,7 @@ const Events = ({ dispatch }) => {
   return (
     <>
       {/* Sort Cards Component  */}
-      <SortCardContext.Provider
-        value={{
-          sortValue,
-          applySort: applySortHandler,
-          dispatch,
-        }}
-      >
+      <SortCardContext.Provider value={{ sortValue, dispatch }}>
         <SortCards />
       </SortCardContext.Provider>
       {/* Event Cards */}

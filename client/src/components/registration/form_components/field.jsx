@@ -12,11 +12,11 @@ export const FieldComponent = ({ errors, touched, field, getFieldProps, type }) 
       name={field}
       type={type ? type : 'text'}
       {...getFieldProps(field)}
-      className={`bg-gray-50 border ${
+      className={`border bg-gray-50 ${
         errors[field] && touched[field]
-          ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-          : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-      } text-lg rounded-lg block w-full px-4 py-2 bg-gray-200 border-gray-600 placeholder-gray-400 text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+          : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+      } block w-full rounded-lg border-gray-600 bg-gray-200 px-4 py-2 text-lg text-gray-900 placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
       placeholder={`Enter your ${field === 'fullName' ? 'name' : field.replace(/([A-Z])/g, '$1').trim()}`}
     />
     {errorMessage({ errors, touched, field })}
@@ -34,11 +34,13 @@ export const DatePickerField = ({ errors, touched, field, setFieldValue }) => {
           setFieldValue(field, date);
           setStartDate(date);
         }}
-        className={`bg-gray-50 border ${
+        maxDate={new Date()}
+        minDate={new Date(1900, 0, 1)}
+        className={`border bg-gray-50 ${
           errors[field] && touched[field]
-            ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
-        } text-lg rounded-lg block w-full px-4 py-2 bg-gray-200 border-gray-600 placeholder-gray-400 text-gray-900 dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+            : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+        } block w-full rounded-lg border-gray-600 bg-gray-200 px-4 py-2 text-lg text-gray-900 placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500`}
       />
       {errorMessage({ errors, touched, field })}
     </div>

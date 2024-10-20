@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    sort: '',
-    order: '',
+    sort: 'title',
+    order: 'asc',
 };
 
 const sortEventsSlice = createSlice({

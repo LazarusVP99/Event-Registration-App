@@ -2,12 +2,12 @@ import EventCountdown from './countdown';
 import { PropTypes } from 'prop-types';
 
 const EventsWithNoUsers = ({ event }) => (
-  <div className='font-bold flex flex-col items-center gap-2 text-xl'>
-    <h1 className='my-8 font-serif text-xl text-gray-800 font-bold sm:text-3xl xl:text-5xl'>
+  <div className='flex flex-col items-center gap-2 font-bold'>
+    <h1 className='~text-xl/5xl my-8 font-serif font-bold  text-gray-800'>
       No participants applied to this event yet
     </h1>
 
-    <div className='bg-gray-500 w-fit flex text-white p-1 rounded-md shadow-md mt-8 pt-5 pr-4'>
+    <div className='~lg:~pt-2/5 ~lg:~px-2/5 inset-4 mt-8 flex w-fit rounded-md bg-gray-500 text-white shadow-md'>
       <EventCountdown event={event} />
     </div>
   </div>

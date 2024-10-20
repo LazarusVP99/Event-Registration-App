@@ -6,7 +6,10 @@ import { DatePickerField, FieldComponent } from './form_components/field.jsx';
 import { Validation, userSubmission } from './submit.js';
 import RadioSelect from './form_components/radio.jsx';
 
-import { useRegisteredUserMutation } from '../../store/api/event.register.js';
+import {
+  useGetRegisteredEventMembersQuery,
+  useRegisteredUserMutation,
+} from '../../store/api/event.register.js';
 import { useGetEventByIdQuery } from '../../store/api/events.js';
 import Spinner from '../utils/spinner.jsx';
 
@@ -14,15 +17,18 @@ const RegistrationForm = () => {
   const { id } = useParams();
   const [registerUser] = useRegisteredUserMutation();
   const { data: eventsData, isLoading } = useGetEventByIdQuery({ id });
+  const { refetch } = useGetRegisteredEventMembersQuery({
+    eventId: id,
+  });
 
-  const onSubmitHandler = async (values) => userSubmission({ values, registerUser });
+  const onSubmitHandler = async (values) => userSubmission({ values, registerUser, refetch });
 
   const expiredOrActiveEvent = () => (
-    <div className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg text-center'>
-      <p className='text-xl text-red-600 font-bold'>Event has expired or is not active.</p>
+    <div className='w-full max-w-lg rounded-b-md bg-white p-6 text-center shadow-lg md:p-8'>
+      <p className='text-xl font-bold text-red-600'>Event has expired or is not active.</p>
       <Link
         to='/'
-        className='mt-4 inline-block bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg'
+        className='mt-4 inline-block rounded-md bg-gray-800 p-2 text-lg font-bold text-white hover:bg-gray-800/75'
       >
         Return to Events
       </Link>
@@ -32,9 +38,9 @@ const RegistrationForm = () => {
   if (isLoading) return <Spinner />;
 
   return (
-    <div className='flex flex-col items-center justify-center w-screen min-h-screen bg-gray-800 shadow-sm shadow-white p-4'>
-      <div className='border border-b-slate-300 rounded-t-md w-full p-4 md:p-5 max-w-lg text-center'>
-        <h1 className='text-white text-3xl md:text-4xl mt-4 md:mt-6 font-bold text-center'>
+    <div className='flex min-h-screen w-screen flex-col items-center justify-center bg-gray-800 p-4 shadow-sm shadow-white'>
+      <div className='w-full max-w-lg rounded-t-md border border-b-slate-300 p-4 text-center md:p-5'>
+        <h1 className='mt-4 text-center text-3xl font-bold text-white md:mt-6 md:text-4xl'>
           Event Registration Form
         </h1>
       </div>
@@ -56,7 +62,7 @@ const RegistrationForm = () => {
             <Form
               noValidate
               onSubmit={handleSubmit}
-              className='bg-white rounded-b-md p-6 md:p-8 w-full max-w-lg shadow-lg'
+              className='w-full max-w-lg rounded-b-md bg-white p-6 shadow-lg md:p-8'
             >
               <div className='space-y-6 md:space-y-10'>
                 <FieldComponent
@@ -73,8 +79,8 @@ const RegistrationForm = () => {
                   getFieldProps={getFieldProps}
                 />
 
-                <div className='flex flex-col md:flex-row md:items-start justify-normal'>
-                  <span className='text-lg md:text-xl w-[390px] mt-2'>Enter your birth date:</span>
+                <div className='flex flex-col justify-normal md:flex-row md:items-start'>
+                  <span className='mt-2 w-[390px] text-lg md:text-xl'>Enter your birth date:</span>
                   <DatePickerField
                     field='dateOfBirth'
                     errors={errors}
@@ -84,7 +90,7 @@ const RegistrationForm = () => {
                 </div>
               </div>
 
-              <hr className='w-full h-0.5 bg-stone-500 my-6 md:my-8' />
+              <hr className='my-6 h-0.5 w-full bg-stone-500 md:my-8' />
 
               <RadioSelect
                 errors={errors}
@@ -92,17 +98,17 @@ const RegistrationForm = () => {
                 getFieldProps={getFieldProps}
               />
 
-              <div className='flex flex-col md:flex-row justify-between items-center mt-6 space-y-4 md:space-y-0'>
+              <div className='mt-6 flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0'>
                 <button
                   type='submit'
                   disabled={isSubmitting}
-                  className='w-full md:w-auto bg-gray-800 hover:bg-gray-800/75 text-white font-bold p-2 rounded-md text-lg capitalize disabled:bg-gray-400'
+                  className='w-full rounded-md bg-gray-800 p-2 text-lg font-bold capitalize text-white hover:bg-gray-800/75 disabled:bg-gray-400 md:w-auto'
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit Registration'}
                 </button>
                 <Link
                   to='/'
-                  className='w-full md:w-auto text-center hover:text-gray-800/75 uppercase text-neutral-900 font-semibold tracking-wide'
+                  className='w-full text-center font-semibold uppercase tracking-wide text-neutral-900 hover:text-gray-800/75 md:w-auto'
                 >
                   Return to Events
                 </Link>
@@ -114,9 +120,5 @@ const RegistrationForm = () => {
     </div>
   );
 };
-
-// RegistrationForm.propTypes = {
-//   dispatch: PropTypes.func.isRequired,
-// };
 
 export default RegistrationForm;

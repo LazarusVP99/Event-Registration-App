@@ -19,9 +19,7 @@ ReactDOM.createRoot(root).render(
       persistor={persistor}
     >
       <Provider store={store}>
-        <BrowserRouter>
           <App />
-        </BrowserRouter>
       </Provider>
     </PersistGate>
   </React.StrictMode>
