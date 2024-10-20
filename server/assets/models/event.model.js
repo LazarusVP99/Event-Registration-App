@@ -43,12 +43,6 @@ const eventSchema = new Schema({
         type: String,
         default: 'John Doe',
     },
-    registrations: [
-        {
-            registerDate: { type: Date, required: true },
-            numberOfRegistered: { type: Number, default: 0, required: true },
-        },
-    ],
 })
 
 eventSchema.plugin(aggregatePaginate);
